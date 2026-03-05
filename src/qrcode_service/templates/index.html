@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}" />
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card">
+        <header class="card__header">
+          <h1>QR Code Generator</h1>
+          <p>Paste an <strong>https://</strong> link, preview it, then download a PNG.</p>
+        </header>
+
+        <form method="post" class="form">
+          <label class="label" for="link">Link</label>
+          <div class="row">
+            <input
+              id="link"
+              name="link"
+              type="url"
+              placeholder="https://example.com"
+              value="{{ state.value }}"
+              autocomplete="off"
+              required
+            />
+            <button class="btn btn--primary" type="submit">Generate</button>
+          </div>
+
+          {% if state.error %}
+            <div class="alert alert--error">{{ state.error }}</div>
+          {% endif %}
+        </form>
+
+        {% if state.png_b64 %}
+        <section class="preview">
+          <h2>Preview</h2>
+          <div class="preview__box">
+            <img
+              alt="QR code preview"
+              src="data:image/png;base64,{{ state.png_b64 }}"
+            />
+          </div>
+
+          <form method="post" action="/download">
+            <input type="hidden" name="link" value="{{ state.value }}" />
+            <button class="btn btn--ghost" type="submit">Download PNG</button>
+          </form>
+        </section>
+        {% endif %}
+
+        <footer class="card__footer">
+          <span class="muted">Runs locally • FastAPI + Jinja2 • PNG export</span>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>

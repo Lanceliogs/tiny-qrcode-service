@@ -1,0 +1,31 @@
+[project]
+name = "qrcode-service"
+version = "0.1.0"
+description = "FastAPI QR code generator"
+authors = [
+    {name = "Julien Lancelot", email = "julienlancelot91@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.0"
+uvicorn = { version = "^0.30.0", extras = ["standard"] }
+jinja2 = "^3.1.4"
+python-multipart = "^0.0.9"
+qrcode = "^8.0"
+pillow = "^10.4.0"
+
+[tool.poetry]
+packages = [{include = "qrcode_service", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.9"
+
+[tool.poetry.scripts]
+qrcode-service = "qrcode_service.app:main"
