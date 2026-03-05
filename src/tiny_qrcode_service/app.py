@@ -109,7 +109,7 @@ async def download(link: str = Form(...)):
 
 
 def main():
-    uvicorn.run("qrcode_service.app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("tiny_qrcode_service.app:app", host="127.0.0.1", port=8000, reload=True)
 
 if __name__ == "__main__":
     main()
