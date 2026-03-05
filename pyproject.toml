@@ -27,5 +27,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.9"
 
-[tool.poetry.scripts]
+[project.scripts]
 app = "tiny_qrcode_service.app:main"
+
+[tool.poetry.scripts]
+start-app = "tiny_qrcode_service.app:main"
