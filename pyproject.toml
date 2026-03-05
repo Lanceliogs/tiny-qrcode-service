@@ -1,7 +1,7 @@
 [project]
-name = "qrcode-service"
+name = "tiny-qrcode-service"
 version = "0.1.0"
-description = "FastAPI QR code generator"
+description = "Tiny FastAPI QR code generator"
 authors = [
     {name = "Julien Lancelot", email = "julienlancelot91@gmail.com"}
 ]
@@ -18,7 +18,7 @@ qrcode = "^8.0"
 pillow = "^10.4.0"
 
 [tool.poetry]
-packages = [{include = "qrcode_service", from = "src"}]
+packages = [{include = "tiny_qrcode_service", from = "src"}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -28,4 +28,4 @@ build-backend = "poetry.core.masonry.api"
 ruff = "^0.6.9"
 
 [tool.poetry.scripts]
-qrcode-service = "qrcode_service.app:main"
+start-app = "tiny_qrcode_service.app:main"
