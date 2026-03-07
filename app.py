@@ -14,7 +14,7 @@ import uvicorn
 from PIL import Image
 from pydantic import BaseModel, Field, HttpUrl, ValidationError, field_validator
 
-from fastapi import FastAPI, Depends, Form, Request, Response, HTTPException
+from fastapi import FastAPI, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
