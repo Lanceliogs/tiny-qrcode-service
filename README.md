@@ -12,10 +12,11 @@ A single-page QR code generator with customization options, built with FastAPI a
 - **Logo embedding** — Upload an image to place in the center of the QR code (error correction auto-adjusts)
 - **Size controls** — Adjust module size and border width
 - **PNG export** — Download the generated QR code as a PNG file
+- **JSON API** — `POST /api/generate` for programmatic access
 
 ## Stack
 
-- **Backend:** Python 3.12, FastAPI, Jinja2, [python-qrcode](https://github.com/lincolnloop/python-qrcode), Pillow
+- **Backend:** Python 3.12, FastAPI, Pydantic, Jinja2, [python-qrcode](https://github.com/lincolnloop/python-qrcode), Pillow
 - **Frontend:** Vanilla HTML/CSS/JS — no framework, no build step
 - **Deployment:** Vercel (serverless Python)
 
@@ -53,6 +54,36 @@ vercel --prod
 ├── requirements.txt        # Pinned deps for Vercel
 └── .vercelignore           # Hides pyproject.toml from Vercel
 ```
+
+## API
+
+`POST /api/generate` — accepts a JSON body, returns a QR code PNG.
+
+```bash
+curl -X POST https://tiny-qrcode-service.vercel.app/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"link": "https://example.com"}' \
+  -o qrcode.png
+```
+
+With options:
+
+```json
+{
+  "link": "https://example.com",
+  "options": {
+    "fill_color": "#1a1a2e",
+    "bg_color": "#ffffff",
+    "gradient_type": "radial",
+    "gradient_end_color": "#e94560",
+    "module_drawer": "circle",
+    "box_size": 15,
+    "border": 2
+  }
+}
+```
+
+All `options` fields are optional and fall back to sensible defaults. Full validation errors are returned as 422 responses. Interactive docs are available at `/docs`.
 
 ## License
 
