@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>QR Code Generator</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='favicon.svg') }}" />
     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}" />
   </head>
   <body>
@@ -11,7 +12,7 @@
       <section class="card">
         <header class="card__header">
           <h1>QR Code Generator</h1>
-          <p>Paste an <strong>https://</strong> link, preview it, then download a PNG.</p>
+          <p>Paste an <strong>https://</strong> link, customize your QR code, then download a PNG.</p>
         </header>
 
         <form method="post" class="form">
@@ -32,6 +33,105 @@
           {% if state.error %}
             <div class="alert alert--error">{{ state.error }}</div>
           {% endif %}
+
+          <details class="customize" {% if state.is_customized %}open{% endif %}>
+            <summary>Customize</summary>
+            <div class="customize__body">
+
+              {# ── Shape ─────────────────────────────── #}
+              <div class="ctrl-group">
+                <span class="ctrl-label">Shape</span>
+                <div class="shape-options">
+                  {% set shapes = [
+                    ("square",         "Square",  '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="1" y="1" width="7" height="7"/><rect x="10" y="1" width="7" height="7"/><rect x="1" y="10" width="7" height="7"/><rect x="10" y="10" width="7" height="7"/></svg>'),
+                    ("rounded",        "Rounded", '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="1" y="1" width="7" height="7" rx="2"/><rect x="10" y="1" width="7" height="7" rx="2"/><rect x="1" y="10" width="7" height="7" rx="2"/><rect x="10" y="10" width="7" height="7" rx="2"/></svg>'),
+                    ("circle",         "Circle",  '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><circle cx="4.5" cy="4.5" r="3.5"/><circle cx="13.5" cy="4.5" r="3.5"/><circle cx="4.5" cy="13.5" r="3.5"/><circle cx="13.5" cy="13.5" r="3.5"/></svg>'),
+                    ("gapped",         "Gapped",  '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="2" y="2" width="5" height="5"/><rect x="11" y="2" width="5" height="5"/><rect x="2" y="11" width="5" height="5"/><rect x="11" y="11" width="5" height="5"/></svg>'),
+                    ("vertical_bars",  "V-Bars",  '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="1" y="1" width="4" height="16" rx="2"/><rect x="7" y="1" width="4" height="16" rx="2"/><rect x="13" y="1" width="4" height="16" rx="2"/></svg>'),
+                    ("horizontal_bars","H-Bars",  '<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><rect x="1" y="1" width="16" height="4" rx="2"/><rect x="1" y="7" width="16" height="4" rx="2"/><rect x="1" y="13" width="16" height="4" rx="2"/></svg>'),
+                  ] %}
+                  {% for val, label, icon in shapes %}
+                  <label class="shape-option">
+                    <input type="radio" name="module_drawer" value="{{ val }}"
+                      {% if state.module_drawer == val %}checked{% endif %} />
+                    <span class="shape-card">
+                      <span class="shape-icon">{{ icon | safe }}</span>
+                      <span class="shape-name">{{ label }}</span>
+                    </span>
+                  </label>
+                  {% endfor %}
+                </div>
+              </div>
+
+              {# ── Colors ────────────────────────────── #}
+              <div class="ctrl-group">
+                <span class="ctrl-label">Colors</span>
+                <div class="color-controls">
+                  <label class="color-field">
+                    <span>Fill</span>
+                    <input type="color" name="fill_color" value="{{ state.fill_color }}" />
+                  </label>
+                  <label class="color-field">
+                    <span>Background</span>
+                    <input type="color" name="bg_color" value="{{ state.bg_color }}" />
+                  </label>
+                </div>
+              </div>
+
+              {# ── Gradient ──────────────────────────── #}
+              <div class="ctrl-group">
+                <span class="ctrl-label">Gradient</span>
+                <div class="gradient-controls">
+                  <select name="gradient_type" id="gradient-type">
+                    {% for val, label in [("none","None"),("radial","Radial"),("horizontal","Horizontal"),("vertical","Vertical")] %}
+                    <option value="{{ val }}" {% if state.gradient_type == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                  <label class="color-field" id="gradient-end-wrap"
+                    {% if state.gradient_type == 'none' %}hidden{% endif %}>
+                    <span>End color</span>
+                    <input type="color" name="gradient_end_color" value="{{ state.gradient_end_color }}" />
+                  </label>
+                </div>
+              </div>
+
+              {# ── Logo ──────────────────────────────── #}
+              <div class="ctrl-group">
+                <span class="ctrl-label">Logo</span>
+                <div class="logo-controls">
+                  <input type="file" accept="image/*" id="logo-file" class="file-input"
+                    {% if state.logo_b64 %}hidden{% endif %} />
+                  <input type="hidden" name="logo_b64" id="logo-b64"
+                    value="{{ state.logo_b64 or '' }}" />
+                  <div class="logo-preview" id="logo-preview"
+                    {% if not state.logo_b64 %}hidden{% endif %}>
+                    <img id="logo-thumb" alt="Logo preview"
+                      {% if state.logo_b64 %}src="data:image/png;base64,{{ state.logo_b64 }}"{% endif %} />
+                    <button type="button" class="btn btn--small btn--ghost" id="logo-change">Change</button>
+                    <button type="button" class="btn btn--small btn--danger" id="logo-remove">Remove</button>
+                  </div>
+                </div>
+              </div>
+
+              {# ── Size ──────────────────────────────── #}
+              <div class="ctrl-group">
+                <span class="ctrl-label">Size</span>
+                <div class="size-controls">
+                  <label class="range-field">
+                    <span>Module size <strong id="box-size-val">{{ state.box_size }}</strong></span>
+                    <input type="range" name="box_size" min="5" max="20"
+                      value="{{ state.box_size }}" id="box-size-range" />
+                  </label>
+                  <label class="range-field">
+                    <span>Border <strong id="border-val">{{ state.border }}</strong></span>
+                    <input type="range" name="border" min="0" max="8"
+                      value="{{ state.border }}" id="border-range" />
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </details>
         </form>
 
         {% if state.png_b64 %}
@@ -46,15 +146,28 @@
 
           <form method="post" action="/download">
             <input type="hidden" name="link" value="{{ state.value }}" />
+            <input type="hidden" name="fill_color" value="{{ state.fill_color }}" />
+            <input type="hidden" name="bg_color" value="{{ state.bg_color }}" />
+            <input type="hidden" name="gradient_type" value="{{ state.gradient_type }}" />
+            <input type="hidden" name="gradient_end_color" value="{{ state.gradient_end_color }}" />
+            <input type="hidden" name="module_drawer" value="{{ state.module_drawer }}" />
+            <input type="hidden" name="logo_b64" value="{{ state.logo_b64 or '' }}" />
+            <input type="hidden" name="box_size" value="{{ state.box_size }}" />
+            <input type="hidden" name="border" value="{{ state.border }}" />
             <button class="btn btn--ghost" type="submit">Download PNG</button>
           </form>
         </section>
         {% endif %}
 
         <footer class="card__footer">
-          <span class="muted">Runs locally • FastAPI + Jinja2 • PNG export</span>
+          <span class="muted">Made by Julien Lancelot &bull;
+            <a href="https://github.com/Lanceliogs/tiny-qrcode-service" target="_blank" rel="noopener">See Github repo</a> &bull;
+            Powered by Vercel + FastAPI + Jinja2
+          </span>
         </footer>
       </section>
     </main>
+
+    <script src="{{ url_for('static', path='main.js') }}"></script>
   </body>
 </html>
