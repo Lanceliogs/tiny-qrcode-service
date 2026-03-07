@@ -12,8 +12,8 @@ const thumb    = $("logo-thumb");
 logoFile.addEventListener("change", () => {
   const file = logoFile.files[0];
   if (!file) return;
-  if (file.size > 1024 * 1024) {
-    alert("Logo must be under 1 MB.");
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Logo must be under 2 MB.");
     logoFile.value = "";
     return;
   }

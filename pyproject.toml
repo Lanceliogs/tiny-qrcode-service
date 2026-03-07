@@ -26,6 +26,11 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.9"
+pytest = "^8.0"
+pytest-anyio = "*"
+httpx = "^0.27"
+
+[tool.pytest.ini_options]
 
 [tool.poetry.scripts]
 start-app = "app:main"

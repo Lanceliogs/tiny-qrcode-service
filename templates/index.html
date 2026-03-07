@@ -53,7 +53,7 @@
                   {% for val, label, icon in shapes %}
                   <label class="shape-option">
                     <input type="radio" name="module_drawer" value="{{ val }}"
-                      {% if state.module_drawer == val %}checked{% endif %} />
+                      {% if state.options.module_drawer == val %}checked{% endif %} />
                     <span class="shape-card">
                       <span class="shape-icon">{{ icon | safe }}</span>
                       <span class="shape-name">{{ label }}</span>
@@ -69,11 +69,11 @@
                 <div class="color-controls">
                   <label class="color-field">
                     <span>Fill</span>
-                    <input type="color" name="fill_color" value="{{ state.fill_color }}" />
+                    <input type="color" name="fill_color" value="{{ state.options.fill_color }}" />
                   </label>
                   <label class="color-field">
                     <span>Background</span>
-                    <input type="color" name="bg_color" value="{{ state.bg_color }}" />
+                    <input type="color" name="bg_color" value="{{ state.options.bg_color }}" />
                   </label>
                 </div>
               </div>
@@ -84,13 +84,13 @@
                 <div class="gradient-controls">
                   <select name="gradient_type" id="gradient-type">
                     {% for val, label in [("none","None"),("radial","Radial"),("horizontal","Horizontal"),("vertical","Vertical")] %}
-                    <option value="{{ val }}" {% if state.gradient_type == val %}selected{% endif %}>{{ label }}</option>
+                    <option value="{{ val }}" {% if state.options.gradient_type == val %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                   </select>
                   <label class="color-field" id="gradient-end-wrap"
-                    {% if state.gradient_type == 'none' %}hidden{% endif %}>
+                    {% if state.options.gradient_type == 'none' %}hidden{% endif %}>
                     <span>End color</span>
-                    <input type="color" name="gradient_end_color" value="{{ state.gradient_end_color }}" />
+                    <input type="color" name="gradient_end_color" value="{{ state.options.gradient_end_color }}" />
                   </label>
                 </div>
               </div>
@@ -100,13 +100,13 @@
                 <span class="ctrl-label">Logo</span>
                 <div class="logo-controls">
                   <input type="file" accept="image/*" id="logo-file" class="file-input"
-                    {% if state.logo_b64 %}hidden{% endif %} />
+                    {% if state.options.logo_b64 %}hidden{% endif %} />
                   <input type="hidden" name="logo_b64" id="logo-b64"
-                    value="{{ state.logo_b64 or '' }}" />
+                    value="{{ state.options.logo_b64 or '' }}" />
                   <div class="logo-preview" id="logo-preview"
-                    {% if not state.logo_b64 %}hidden{% endif %}>
+                    {% if not state.options.logo_b64 %}hidden{% endif %}>
                     <img id="logo-thumb" alt="Logo preview"
-                      {% if state.logo_b64 %}src="data:image/png;base64,{{ state.logo_b64 }}"{% endif %} />
+                      {% if state.options.logo_b64 %}src="data:image/png;base64,{{ state.options.logo_b64 }}"{% endif %} />
                     <button type="button" class="btn btn--small btn--ghost" id="logo-change">Change</button>
                     <button type="button" class="btn btn--small btn--danger" id="logo-remove">Remove</button>
                   </div>
@@ -118,14 +118,14 @@
                 <span class="ctrl-label">Size</span>
                 <div class="size-controls">
                   <label class="range-field">
-                    <span>Module size <strong id="box-size-val">{{ state.box_size }}</strong></span>
+                    <span>Module size <strong id="box-size-val">{{ state.options.box_size }}</strong></span>
                     <input type="range" name="box_size" min="5" max="20"
-                      value="{{ state.box_size }}" id="box-size-range" />
+                      value="{{ state.options.box_size }}" id="box-size-range" />
                   </label>
                   <label class="range-field">
-                    <span>Border <strong id="border-val">{{ state.border }}</strong></span>
+                    <span>Border <strong id="border-val">{{ state.options.border }}</strong></span>
                     <input type="range" name="border" min="0" max="8"
-                      value="{{ state.border }}" id="border-range" />
+                      value="{{ state.options.border }}" id="border-range" />
                   </label>
                 </div>
               </div>
@@ -146,14 +146,14 @@
 
           <form method="post" action="/download">
             <input type="hidden" name="link" value="{{ state.value }}" />
-            <input type="hidden" name="fill_color" value="{{ state.fill_color }}" />
-            <input type="hidden" name="bg_color" value="{{ state.bg_color }}" />
-            <input type="hidden" name="gradient_type" value="{{ state.gradient_type }}" />
-            <input type="hidden" name="gradient_end_color" value="{{ state.gradient_end_color }}" />
-            <input type="hidden" name="module_drawer" value="{{ state.module_drawer }}" />
-            <input type="hidden" name="logo_b64" value="{{ state.logo_b64 or '' }}" />
-            <input type="hidden" name="box_size" value="{{ state.box_size }}" />
-            <input type="hidden" name="border" value="{{ state.border }}" />
+            <input type="hidden" name="fill_color" value="{{ state.options.fill_color }}" />
+            <input type="hidden" name="bg_color" value="{{ state.options.bg_color }}" />
+            <input type="hidden" name="gradient_type" value="{{ state.options.gradient_type }}" />
+            <input type="hidden" name="gradient_end_color" value="{{ state.options.gradient_end_color }}" />
+            <input type="hidden" name="module_drawer" value="{{ state.options.module_drawer }}" />
+            <input type="hidden" name="logo_b64" value="{{ state.options.logo_b64 or '' }}" />
+            <input type="hidden" name="box_size" value="{{ state.options.box_size }}" />
+            <input type="hidden" name="border" value="{{ state.options.border }}" />
             <button class="btn btn--ghost" type="submit">Download PNG</button>
           </form>
         </section>
