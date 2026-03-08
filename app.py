@@ -71,6 +71,7 @@ IMAGE_SIGNATURES = (
 class QROptions(BaseModel):
     fill_color: str = "#000000"
     bg_color: str = "#ffffff"
+    transparent_bg: bool = False
     gradient_type: GradientType = "none"
     gradient_end_color: str = "#0000ff"
     module_drawer: ModuleDrawerType = "square"
@@ -149,23 +150,28 @@ def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
 
 
 def _build_color_mask(opts: QROptions):
-    fill_rgb = _hex_to_rgb(opts.fill_color)
-    bg_rgb = _hex_to_rgb(opts.bg_color)
-    end_rgb = _hex_to_rgb(opts.gradient_end_color)
+    fill_col = _hex_to_rgb(opts.fill_color)
+    bg_col = _hex_to_rgb(opts.bg_color)
+    end_col = _hex_to_rgb(opts.gradient_end_color)
+
+    if opts.transparent_bg:
+        bg_col = (*fill_col, 0)
+        fill_col = (*fill_col, 255)
+        end_col = (*end_col, 255)
 
     if opts.gradient_type == "radial":
         return RadialGradiantColorMask(
-            back_color=bg_rgb, center_color=fill_rgb, edge_color=end_rgb,
+            back_color=bg_col, center_color=fill_col, edge_color=end_col,
         )
     if opts.gradient_type == "horizontal":
         return HorizontalGradiantColorMask(
-            back_color=bg_rgb, left_color=fill_rgb, right_color=end_rgb,
+            back_color=bg_col, left_color=fill_col, right_color=end_col,
         )
     if opts.gradient_type == "vertical":
         return VerticalGradiantColorMask(
-            back_color=bg_rgb, top_color=fill_rgb, bottom_color=end_rgb,
+            back_color=bg_col, top_color=fill_col, bottom_color=end_col,
         )
-    return SolidFillColorMask(back_color=bg_rgb, front_color=fill_rgb)
+    return SolidFillColorMask(back_color=bg_col, front_color=fill_col)
 
 
 def _make_qr_png(value: str, opts: QROptions) -> bytes:
@@ -210,6 +216,7 @@ def _make_qr_png(value: str, opts: QROptions) -> bytes:
 async def _form_options(
     fill_color: str = Form("#000000"),
     bg_color: str = Form("#ffffff"),
+    transparent_bg: str = Form(""),
     gradient_type: str = Form("none"),
     gradient_end_color: str = Form("#0000ff"),
     module_drawer: str = Form("square"),
@@ -221,6 +228,7 @@ async def _form_options(
         return QROptions(
             fill_color=fill_color,
             bg_color=bg_color,
+            transparent_bg=transparent_bg == "on",
             gradient_type=gradient_type,
             gradient_end_color=gradient_end_color,
             module_drawer=module_drawer,

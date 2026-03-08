@@ -267,6 +267,44 @@ input[type="color"]::-moz-color-swatch {
   border-radius: 5px;
 }
 
+/* ── Checkbox ────────────────────────────────────────── */
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.checkbox-field input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background: var(--ctrl-bg);
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+.checkbox-field input[type="checkbox"]::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  transform: scale(0);
+  transition: transform 0.1s ease;
+  background: rgba(140, 170, 255, 0.8);
+}
+.checkbox-field input[type="checkbox"]:checked::after {
+  transform: scale(1);
+}
+.checkbox-field input[type="checkbox"]:checked {
+  border-color: var(--accent);
+}
+
 /* ── Gradient dropdown ───────────────────────────────── */
 
 select {

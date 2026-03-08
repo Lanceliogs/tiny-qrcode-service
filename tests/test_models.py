@@ -148,3 +148,7 @@ class TestPageState:
     def test_non_default_border_is_customized(self):
         state = PageState(options=QROptions(border=0))
         assert state.is_customized is True
+
+    def test_transparent_bg_is_customized(self):
+        state = PageState(options=QROptions(transparent_bg=True))
+        assert state.is_customized is True

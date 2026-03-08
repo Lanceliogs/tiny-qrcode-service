@@ -4,6 +4,12 @@ $("gradient-type").addEventListener("change", function () {
   $("gradient-end-wrap").hidden = this.value === "none";
 });
 
+const bgWrap = $("bg-color-wrap");
+$("transparent-bg").addEventListener("change", function () {
+  bgWrap.style.opacity = this.checked ? ".4" : "";
+  bgWrap.style.pointerEvents = this.checked ? "none" : "";
+});
+
 const logoFile = $("logo-file");
 const logoB64  = $("logo-b64");
 const preview  = $("logo-preview");
