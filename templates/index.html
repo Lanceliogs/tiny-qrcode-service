@@ -71,9 +71,15 @@
                     <span>Fill</span>
                     <input type="color" name="fill_color" value="{{ state.options.fill_color }}" />
                   </label>
-                  <label class="color-field">
+                  <label class="color-field" id="bg-color-wrap"
+                    {% if state.options.transparent_bg %}style="opacity:.4;pointer-events:none"{% endif %}>
                     <span>Background</span>
                     <input type="color" name="bg_color" value="{{ state.options.bg_color }}" />
+                  </label>
+                  <label class="checkbox-field">
+                    <input type="checkbox" name="transparent_bg" id="transparent-bg"
+                      {% if state.options.transparent_bg %}checked{% endif %} />
+                    <span>Transparent background</span>
                   </label>
                 </div>
               </div>
@@ -148,6 +154,9 @@
             <input type="hidden" name="link" value="{{ state.value }}" />
             <input type="hidden" name="fill_color" value="{{ state.options.fill_color }}" />
             <input type="hidden" name="bg_color" value="{{ state.options.bg_color }}" />
+            {% if state.options.transparent_bg %}
+            <input type="hidden" name="transparent_bg" value="on" />
+            {% endif %}
             <input type="hidden" name="gradient_type" value="{{ state.options.gradient_type }}" />
             <input type="hidden" name="gradient_end_color" value="{{ state.options.gradient_end_color }}" />
             <input type="hidden" name="module_drawer" value="{{ state.options.module_drawer }}" />

@@ -158,3 +158,26 @@ async def test_api_generate_box_size_out_of_range(client):
         },
     )
     assert resp.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_api_generate_transparent_bg(client):
+    resp = await client.post(
+        "/api/generate",
+        json={
+            "link": "https://example.com",
+            "options": {"transparent_bg": True},
+        },
+    )
+    assert resp.status_code == 200
+    assert resp.content[:4] == b"\x89PNG"
+
+
+@pytest.mark.anyio
+async def test_post_generate_transparent_bg(client):
+    resp = await client.post("/", data={
+        "link": "https://example.com",
+        "transparent_bg": "on",
+    })
+    assert resp.status_code == 200
+    assert "data:image/png;base64," in resp.text
